@@ -8,59 +8,35 @@ use App\Http\Requests\UpdateSocieteRequest;
 
 class SocieteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Societe::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreSocieteRequest $request)
     {
-        //
+        // return $request;
+        
+        $societe = Societe::create($request->all());
+        
+        return response()->json($societe, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Societe $societe)
     {
-        //
+        return response()->json($societe);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Societe $societe)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateSocieteRequest $request, Societe $societe)
     {
-        //
+        $validated = $request->validated();
+        $societe->update($validated);
+        return response()->json($societe);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Societe $societe)
     {
-        //
+        $societe->delete();
+        return response()->json(['message' => 'Société supprimée'], 200);
     }
 }

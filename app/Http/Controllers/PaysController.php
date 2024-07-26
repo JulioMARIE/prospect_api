@@ -13,16 +13,10 @@ class PaysController extends Controller
      */
     public function index()
     {
-        //
+        // return "ok";
+        return response()->json(Pays::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -37,17 +31,8 @@ class PaysController extends Controller
      */
     public function show(Pays $pays)
     {
-        //
+        return $pays->communes;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pays $pays)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -62,5 +47,10 @@ class PaysController extends Controller
     public function destroy(Pays $pays)
     {
         //
+    }
+
+    public function communesPays(Pays $pays)
+    {
+        return $pays->communes;
     }
 }

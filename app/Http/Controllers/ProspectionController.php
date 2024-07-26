@@ -4,61 +4,54 @@ namespace App\Http\Controllers;
 
 use App\Models\Prospection;
 use App\Http\Requests\StoreProspectionRequest;
-use App\Http\Requests\UpdateProspectionRequest;
+// use App\Http\Requests\UpdateProspectionRequest;
 use Illuminate\Http\Request;
 
 class ProspectionController extends Controller
 {
     public function index()
     {
-        return Prospection::all();
+        return response()->json(Prospection::all());
     }
 
     public function store(StoreProspectionRequest $request)
     {
-        $validated = $request->validate([
-            'client_potentiel' => 'required|string',
-            'date_contact' => 'required|date',
-            // Ajoutez d'autres champs selon votre modèle
-        ]);
-        return Prospection::create($validated);
+        $validated = $request->validated();
+        $prospection = Prospection::create($validated);
+        return response()->json(['successCode' => 1, 'prospection' => $prospection], 201);
     }
 
     public function show(Prospection $prospection)
     {
-        return $prospection;
+        return response()->json($prospection);
     }
 
-    public function update(UpdateProspectionRequest $request, Prospection $prospection)
-    {
-        $validated = $request->validate([
-            'client_potentiel' => 'string',
-            'date_contact' => 'date',
-            // Ajoutez d'autres champs selon votre modèle
-        ]);
-        $prospection->update($validated);
-        return $prospection;
-    }
+    // public function update(UpdateProspectionRequest $request, Prospection $prospection)
+    // {
+    //     $validated = $request->validated();
+    //     $prospection->update($validated);
+    //     return response()->json($prospection);
+    // }
 
     public function destroy(Prospection $prospection)
     {
         $prospection->delete();
-        return response()->json(['message' => 'Prospection supprimée']);
+        return response()->json(['message' => 'Prospection supprimée'], 200);
     }
 
     public function mesProspections(Request $request)
     {
-        return $request->user()->prospections;
+        return response()->json($request->user()->prospections);
     }
 
     public function ajouterSuivi(Request $request, Prospection $prospection)
     {
         $validated = $request->validate([
-            'commentaire' => 'required|string',
-            // Ajoutez d'autres champs pour le suivi
+            'date_heure' => 'required|date',
+            'observations' => 'required|string',
         ]);
-        $suivi = $prospection->suivis()->create($validated);
-        return response()->json(['message' => 'Suivi ajouté', 'suivi' => $suivi]);
-    }
 
+        $suivi = $prospection->suivis()->create($validated);
+        return response()->json(['message' => 'Suivi ajouté', 'suivi' => $suivi], 201);
+    }
 }
