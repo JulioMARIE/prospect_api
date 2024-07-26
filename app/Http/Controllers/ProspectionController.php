@@ -16,8 +16,9 @@ class ProspectionController extends Controller
 
     public function store(StoreProspectionRequest $request)
     {
-        $validated = $request->validated();
-        $prospection = Prospection::create($validated);
+        // return $request;
+        $prospection = Prospection::create($request->all());
+        
         return response()->json(['successCode' => 1, 'prospection' => $prospection], 201);
     }
 

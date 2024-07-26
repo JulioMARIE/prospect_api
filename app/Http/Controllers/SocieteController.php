@@ -19,7 +19,7 @@ class SocieteController extends Controller
         
         $societe = Societe::create($request->all());
         
-        return response()->json($societe, 201);
+        return response()->json(['successCode'=>1, 'societe' => $societe], 201);
     }
 
     public function show(Societe $societe)

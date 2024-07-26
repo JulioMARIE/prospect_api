@@ -9,6 +9,8 @@ class Prospection extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function commercial(){
         return $this->belongsTo(Commercial::class);
     }

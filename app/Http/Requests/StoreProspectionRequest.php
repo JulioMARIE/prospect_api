@@ -23,14 +23,15 @@ class StoreProspectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date_heure' => 'required|date',
+            'date_heure' => 'required|date_format:Y-m-d H:i:s',
+            // 'date_heure' => 'required|date_format:yyyy-MM-dd HH:mm:ss',
             'personne_rencontree' => 'required|string|max:255',
             'contact_pers_rencont' => 'required|string|max:255',
             'fonction_pers_rencont' => 'required|string|max:255',
             'logiciels' => 'nullable|string',
             'observations' => 'nullable|string',
-            'societe_id' => 'required|exists:societes,id',
             'commercial_id' => 'required|exists:commercials,id',
+            'societe_id' => 'required|exists:societes,id'
         ];
     }
 }
