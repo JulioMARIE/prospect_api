@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::get('/user', [AuthController::class, 'user']);
 
     Route::apiResource('/responsables', ResponsableController::class);
+    Route::apiResource('/commercials', CommercialController::class);
     Route::apiResource('societes', SocieteController::class);
     Route::apiResource('pays', PaysController::class);
     Route::get('/communesPays/{pays}', [PaysController::class, 'communesPays']);
@@ -39,7 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Routes pour le Commercial
     Route::prefix('commercial')->group(function () {
         Route::apiResource('prospections', ProspectionController::class);
-        Route::get('mes-prospections', [ProspectionController::class, 'mesProspections']);
+        Route::get('myprospect/{commercial}', [CommercialController::class, 'myprospect']);
         Route::post('prospections/{prospection}/suivi', [ProspectionController::class, 'ajouterSuivi']);
     });
 });

@@ -46,7 +46,12 @@ class CommercialController extends Controller
      */
     public function show(Commercial $commercial)
     {
-        return $commercial->load('utilisateur')->prospections;
+        return $commercial->with('utilisateur');
+    }
+
+    public function myprospect(Commercial $commercial)
+    {
+        return $commercial->prospections->load('societe');;
     }
 
 
