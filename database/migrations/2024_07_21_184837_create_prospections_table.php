@@ -16,12 +16,12 @@ return new class extends Migration
 
         Schema::create('prospections', function (Blueprint $table) {
             $table->id();
-            $table->datetime('date_heure');
+            $table->dateTime('date_heure');
             $table->string('personne_rencontree');
             $table->string('contact_pers_rencont');
             $table->string('fonction_pers_rencont');
-            $table->string('logiciels');
-            $table->string('observations');
+            $table->string('logiciels')->nullable();
+            $table->string('observations')->nullable();
             $table->foreignId('commercial_id');
             $table->foreignId('societe_id');
             $table->foreign('commercial_id')->references('id')->on('commercials')->onDelete('cascade');

@@ -9,6 +9,8 @@ class Suivi extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function prospection(){
         return $this->belongsTo(Prospection::class);
     }

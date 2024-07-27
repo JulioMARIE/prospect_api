@@ -11,7 +11,7 @@ class StoreSuiviRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreSuiviRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'date_heure' => 'required|date_format:Y-m-d H:i:s',
+            'observation' => 'required|string|max:255',
+            'prospection_id' => 'required|exists:prospections,id',
         ];
     }
 }

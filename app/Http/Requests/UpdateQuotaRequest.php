@@ -22,7 +22,10 @@ class UpdateQuotaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'date_debut' => 'date_format:Y-m-d',
+            'date_fin' => 'date_format:Y-m-d',
+            'nombre_fixe' => 'numeric',
+            'commercial_id' => 'exists:commercials,id',
         ];
     }
 }

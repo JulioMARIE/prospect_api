@@ -51,9 +51,14 @@ class CommercialController extends Controller
 
     public function myprospect(Commercial $commercial)
     {
-        return $commercial->prospections->load('societe');;
+            return $commercial->prospections()->orderBy('created_at', 'desc')->with('societe', 'suivis')->get();
     }
 
+
+    public function mesquotas(Commercial $commercial)
+    {
+            return $commercial->quotas()->orderBy('created_at', 'desc')->get();
+    }
 
     /**
      * Update the specified resource in storage.

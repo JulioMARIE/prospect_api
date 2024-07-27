@@ -33,7 +33,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Routes pour le Responsable
     Route::prefix('responsable')->group(function () {
         Route::apiResource('commercials', CommercialController::class);
-        Route::apiResource('quotas', QuotaController::class);
+        Route::apiResource('quotas', QuotaController::class)->except('store');
+        Route::post('addquota/{u}', [QuotaController::class, "store"]);
         // Route::get('rapports', [RapportController::class, 'index']);
     });
 
@@ -41,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('commercial')->group(function () {
         Route::apiResource('prospections', ProspectionController::class);
         Route::get('myprospect/{commercial}', [CommercialController::class, 'myprospect']);
+        Route::get('mesquotas/{commercial}', [CommercialController::class, 'mesquotas']);
         Route::post('prospections/{prospection}/suivi', [ProspectionController::class, 'ajouterSuivi']);
     });
 });

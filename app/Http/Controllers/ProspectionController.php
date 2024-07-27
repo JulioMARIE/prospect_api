@@ -6,6 +6,7 @@ use App\Models\Prospection;
 use App\Http\Requests\StoreProspectionRequest;
 // use App\Http\Requests\UpdateProspectionRequest;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreSuiviRequest;
 
 class ProspectionController extends Controller
 {
@@ -45,14 +46,25 @@ class ProspectionController extends Controller
         return response()->json($request->user()->prospections);
     }
 
-    public function ajouterSuivi(Request $request, Prospection $prospection)
+    public function ajouterSuivi(StoreSuiviRequest $request, Prospection $prospection)
     {
-        $validated = $request->validate([
-            'date_heure' => 'required|date',
-            'observations' => 'required|string',
-        ]);
+        // $validated = $request->validate([
+        //     'date_heure' => 'required|date_format:Y-m-d H:i:s',
+        //     'observation' => 'required|string|max:255',
+        //     'prospection_id' => 'required|exists:prospections,id',
+        // ]);
 
-        $suivi = $prospection->suivis()->create($validated);
-        return response()->json(['message' => 'Suivi ajouté', 'suivi' => $suivi], 201);
+        // // return "ok";
+
+        // return $request['prospection_id'];
+
+    
+        if ($request['prospection_id'] != $prospection->id) {
+            return response()->json(['message' => 'ID de prospection non valide'], 400);
+        }
+
+        $suivi = $prospection->suivis()->create($request->all());
+        return response()->json(['successCode' => 1, 'suivi' => $suivi], 201);
     }
+
 }

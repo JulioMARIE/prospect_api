@@ -37,6 +37,7 @@ class AuthController extends Controller
 
         $commercial = Commercial::where('utilisateur_id', $utilisateur->id)->with('utilisateur')->first();
 
+        $permissions = $commercial->utilisateur->permissions;
         // return $commercial;
 
         if (!$commercial) {
@@ -51,6 +52,7 @@ class AuthController extends Controller
 
         return response()->json([
             'commercial' => $commercial,
+            'permissions' => $permissions,
             'token' => $token
         ]);
     }

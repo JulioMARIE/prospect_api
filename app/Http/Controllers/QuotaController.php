@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Quota;
 use App\Http\Requests\StoreQuotaRequest;
 use App\Http\Requests\UpdateQuotaRequest;
+use App\Models\Responsable;
+use App\Models\Utilisateur;
+
 
 
 class QuotaController extends Controller
@@ -14,15 +17,18 @@ class QuotaController extends Controller
         return Quota::all();
     }
 
-    public function store(StoreQuotaRequest $request)
+    public function store(StoreQuotaRequest $request, Utilisateur $u)
     {
-        
-        $validated = $request->validate([
-            'commercial_id' => 'required|exists:commercials,id',
-            'objectif' => 'required|numeric',
-            'periode' => 'required|date',
-        ]);
-        return Quota::create($validated);
+        // return $u->responsable;
+
+            //ajoutes des policies ou traits pour gérer les droits d'accès;
+            $r = $u->responsable;
+
+            if ($r !=null) {
+                $q = Quota::create($request->all());
+                return response()->json(['successCode' => 1, 'quota' => $q], 201);
+            }
+            return response()->json(['errorCode' => 0, 'message' => 'Utilisateur non responsable'], 404);        
     }
 
     public function show(Quota $quota)
@@ -32,13 +38,7 @@ class QuotaController extends Controller
 
     public function update(UpdateQuotaRequest $request, Quota $quota)
     {
-        
-        $validated = $request->validate([
-            'objectif' => 'numeric',
-            'periode' => 'date',
-            // Ajoutez d'autres champs selon votre modèle
-        ]);
-        $quota->update($validated);
+        $quota->update($request->all());
         return $quota;
     }
 
