@@ -11,7 +11,8 @@ class StorePermissionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = Auth::guard('sanctum')->user();
+        return $user && isset($user->responsable);
     }
 
     /**

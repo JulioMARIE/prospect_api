@@ -21,7 +21,8 @@ return new class extends Migration
             $table->integer('nombre_fixe');
             $table->foreignId('commercial_id');
             $table->foreign('commercial_id')->references('id')->on('commercials')->onDelete('cascade');
-            $table->unique(['commercial_id', 'date_debut', 'date_fin']);
+            $table->unique(['commercial_id', 'date_debut']);
+            $table->unique(['commercial_id', 'date_fin']);
             $table->timestamps();
         });
     }

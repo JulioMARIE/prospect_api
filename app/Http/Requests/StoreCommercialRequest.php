@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class StoreCommercialRequest extends FormRequest
 {
@@ -13,7 +14,8 @@ class StoreCommercialRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = Auth::guard('sanctum')->user();
+        return $user && isset($user->responsable);
     }
 
     /**
@@ -27,7 +29,7 @@ class StoreCommercialRequest extends FormRequest
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:utilisateurs',
-            'mot_de_passe' => 'required|string|min:8',
+            // 'mot_de_passe' => 'required|string|min:8',
         ];
     }
     

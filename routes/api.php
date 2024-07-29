@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PaysController;
 use App\Http\Controllers\SocieteController;
 use Illuminate\Support\Facades\Route;
@@ -18,9 +19,14 @@ Route::post('/responsableLogin', [AuthController::class, 'responsableLogin']);
 // Route pour le mot de passe oublié (sans authentification)
 Route::post('/forgotPassword', [AuthController::class, 'forgotPassword']);
 
+Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
+
 // Routes nécessitant une authentification
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::get('/logout', [AuthController::class, 'logout']);
+    
+    Route::post('/changePassword/{utilisateur}', [AuthController::class, 'changePassword']);
     // // Route d'authentification (pour vérifier le token)
     // Route::get('/user', [AuthController::class, 'user']);
 
@@ -43,6 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('prospections', ProspectionController::class);
         Route::get('myprospect/{commercial}', [CommercialController::class, 'myprospect']);
         Route::get('mesquotas/{commercial}', [CommercialController::class, 'mesquotas']);
+        Route::get('statutQuotaActuel/{commercial}', [CommercialController::class, 'statutQuotaActuel']);
         Route::post('prospections/{prospection}/suivi', [ProspectionController::class, 'ajouterSuivi']);
     });
 });

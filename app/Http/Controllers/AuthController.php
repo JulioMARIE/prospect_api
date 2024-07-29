@@ -30,9 +30,10 @@ class AuthController extends Controller
         // return Hash::check($request->mot_de_passe,$utilisateur->mot_de_passe);
 
         if (!$utilisateur || !Hash::check($request->mot_de_passe, $utilisateur->mot_de_passe)) {
-            throw ValidationException::withMessages([
-                'email' => ["Les informations d'identification fournies sont incorrectes."],
-            ]);
+            return response()->json([
+                'successCode' => 0,
+                'message' => 'Echec',
+            ], 500);
         }
 
         $commercial = Commercial::where('utilisateur_id', $utilisateur->id)->with('utilisateur')->first();
@@ -41,9 +42,10 @@ class AuthController extends Controller
         // return $commercial;
 
         if (!$commercial) {
-            throw ValidationException::withMessages([
-                'email' => ["L'utilisateur n'est pas un commercial."],
-            ]);
+            return response()->json([
+                'successCode' => 0,
+                'message' => 'L\'utilisateur n\'est pas un commercial.',
+            ], 500);
         }
 
         $token = $commercial->utilisateur->createToken('commercial', ['*'], now()->addHours(24))->plainTextToken;
@@ -71,9 +73,10 @@ class AuthController extends Controller
         // return Hash::check($request->mot_de_passe,$utilisateur->mot_de_passe);
 
         if (!$utilisateur || !Hash::check($request->mot_de_passe, $utilisateur->mot_de_passe)) {
-            throw ValidationException::withMessages([
-                'email' => ["Les informations d'identification fournies sont incorrectes."],
-            ]);
+            return response()->json([
+                'successCode' => 0,
+                'message' => 'Echec',
+            ], 500);
         }
 
         $responsable = Responsable::where('utilisateur_id', $utilisateur->id)->with('utilisateur')->first();
@@ -81,9 +84,10 @@ class AuthController extends Controller
         // return $responsable;
 
         if (!$responsable) {
-            throw ValidationException::withMessages([
-                'email' => ["L'utilisateur n'est pas un responsable."],
-            ]);
+            return response()->json([
+                'successCode' => 0,
+                'message' => 'L\'utilisateur n\'est pas un responsable.',
+            ], 500);
         }
 
         $token = $responsable->utilisateur->createToken('responsable', ['*'], now()->addHours(24))->plainTextToken;
@@ -96,9 +100,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    public function logout(Utilisateur $u)
     {
-        $request->utilisateur()->currentAccessToken()->delete();
+        $u->currentAccessToken()->delete();
         return response()->json(['message' => 'Déconnexion réussie']);
     }
 
@@ -123,8 +127,35 @@ class AuthController extends Controller
             }
         } catch (\Exception $e) {
             // Log l'erreur
-            \Log::error('Password reset error: ' . $e->getMessage());
-            return response()->json(['message' => 'An error occurred while processing your request'], 500);
+            // \Log::error('Password reset error: ' . $e->getMessage());
+            return response()->json(['message' => 'Erreur '. $e->getMessage()], 500);
         }
+    }
+
+    public function changePassword(Request $request, Utilisateur $utilisateur)
+    {
+        $request->validate([
+            'mot_de_passe_actuel' => 'required',
+            'nouveau_mot_de_passe' => 'required|min:8|different:mot_de_passe_actuel',
+            'nouveau_mot_de_passe_confirme' => 'required|same:nouveau_mot_de_passe',
+        ]);
+        
+        // return $request->nouveau_mot_de_passe;
+        // return !Hash::check($request->mot_de_passe_actuel, $utilisateur->mot_de_passe);
+
+        if (!Hash::check($request->mot_de_passe_actuel, $utilisateur->mot_de_passe)) {
+            return response()->json([
+                'successCode' => 0,
+                'message' => 'Echec',
+            ], 500);
+        }
+
+            $utilisateur->mot_de_passe = Hash::make($request->nouveau_mot_de_passe);
+            $utilisateur->save();
+
+        return response()->json([
+            'successCode' => 1,
+            'message' => 'Mot de passe changé avec succès.',
+        ]);
     }
 }
