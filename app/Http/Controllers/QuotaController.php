@@ -9,23 +9,26 @@ use App\Models\Responsable;
 use App\Models\Utilisateur;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 
 class QuotaController extends Controller
 {
     public function index()
     {
-        return Quota::all();
+        $user = Auth::guard('sanctum')->user();
+        if($user && isset($user->responsable)) {
+            return response()->json(Quota::with('commercial')->with('utilisateur')->get());
+        }
     }
 
-    public function store(StoreQuotaRequest $request, Utilisateur $u)
+    public function store(StoreQuotaRequest $request)
     {
         // return $u->responsable;
 
             //ajoutes des policies ou traits pour gérer les droits d'accès;
-            $r = $u->responsable;
-
-            if ($r != null)  {
+        $user = Auth::guard('sanctum')->user();
+        if($user && isset($user->responsable)) {
                 $commercial_id = $request->input('commercial_id');
                 $date_debut = Carbon::parse($request->input('date_debut'))->format('Y-m-d');
                 // return $date_debut;

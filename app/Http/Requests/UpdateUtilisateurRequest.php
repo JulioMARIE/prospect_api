@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUtilisateurRequest extends FormRequest
 {
@@ -11,7 +12,8 @@ class UpdateUtilisateurRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = Auth::guard('sanctum')->user();
+        return $user && isset($user->responsable);
     }
 
     /**
@@ -22,7 +24,9 @@ class UpdateUtilisateurRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nom' => 'string|max:255',
+            'prenom' => 'string|max:255',
+            // 'email' => 'string|email|max:255|unique:utilisateurs',
         ];
     }
 }

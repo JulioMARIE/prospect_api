@@ -48,6 +48,11 @@ class SuiviController extends Controller
      */
     public function destroy(Suivi $suivi)
     {
-        //
+        $suivi->delete();
+
+        return response()->json([
+            'successCode' => 1,
+            'message' => 'Suppression effectué avec succès',
+        ]);
     }
 }

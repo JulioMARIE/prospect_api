@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateCommercialRequest extends FormRequest
 {
@@ -11,7 +12,8 @@ class UpdateCommercialRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = Auth::guard('sanctum')->user();
+        return $user && isset($user->responsable);
     }
 
     /**
@@ -22,10 +24,10 @@ class UpdateCommercialRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nom' => 'sometimes|required|string|max:255',
-            'prenom' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:utilisateurs',
-            'mot_de_passe' => 'sometimes|required|string|min:8',
+            'nom' => 'string|max:255',
+            'prenom' => 'string|max:255',
+            // 'email' => 'string|email|max:255|unique:utilisateurs',
+            // 'mot_de_passe' => 'sometimes|required|string|min:8',
         ];
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Permission;
 use App\Http\Requests\StorePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Utilisateur;
 
 class PermissionController extends Controller
 {
@@ -13,7 +15,10 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::guard('sanctum')->user();
+        if($user && isset($user->responsable)) {
+            return response()->json(Permission::all());
+        }
     }
 
     /**
@@ -29,7 +34,8 @@ class PermissionController extends Controller
      */
     public function store(StorePermissionRequest $request)
     {
-        //
+        $p = Permission::create($request->all());
+        return $p;
     }
 
     /**
@@ -37,7 +43,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        //
+        return $permission;
     }
 
     /**
@@ -61,6 +67,7 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        //
+        $permission->delete();
+        return response()->json(['message' => 'Permission supprimé']);
     }
 }

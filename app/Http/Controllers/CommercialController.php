@@ -23,7 +23,10 @@ class CommercialController extends Controller
      */
     public function index()
     {
-        return Commercial::with('utilisateur')->get();
+        $user = Auth::guard('sanctum')->user();
+        if($user && isset($user->responsable)) {
+            return Commercial::with(['utilisateur', 'quotas'])->get();
+        }
     }
 
 
@@ -34,11 +37,11 @@ class CommercialController extends Controller
     {
         // return $request;
 
-    $r = Auth::guard('sanctum')->user()->responsable;
-        return $r;
+        $r = Auth::guard('sanctum')->user()->responsable;
+        // return $r;
 
         if($r)    {
-            $newPassword = generatePassword();
+            $newPassword = $this->generatePassword();
 
             $u = Utilisateur::create([
                 'nom' => $request->nom,
@@ -177,11 +180,9 @@ class CommercialController extends Controller
      */
     public function update(UpdateCommercialRequest $request, Commercial $commercial)
     {
-        $request->validate(
-            [
-                'email' => 'sometimes|required|string|email|max:255|unique:utilisateurs,email'. $commercial->utilisateur_id,
-            ]
-            );
+        // return $request->all();    
+        
+         // return $request;
 
             $u = $commercial->utilisateur;
 
@@ -194,9 +195,9 @@ class CommercialController extends Controller
             if($request->has('email'))    {
                 $u->email = $request->email;
             }
-            if($request->has('mot_de_passe'))    {
-                $u->mot_de_passe = Hash::make($request->mot_de_passe);
-            }
+            // if($request->has('mot_de_passe'))    {
+            //     $u->mot_de_passe = Hash::make($request->mot_de_passe);
+            // }
             
             $u->save();
 
@@ -213,6 +214,7 @@ class CommercialController extends Controller
         $u->delete();
 
         return response()->json([
+            'successCode' => 1,
             'message' => 'Suppression effectué avec succès',
         ]);
     }

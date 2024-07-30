@@ -7,12 +7,21 @@ use App\Http\Requests\StoreProspectionRequest;
 // use App\Http\Requests\UpdateProspectionRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreSuiviRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProspectionController extends Controller
 {
     public function index()
     {
-        return response()->json(Prospection::all());
+        $user = Auth::guard('sanctum')->user();
+        if($user && isset($user->responsable)) {
+            $prospections = Prospection::with([
+                'commercial.utilisateur',
+                'societe',
+                'suivis'
+            ])->get();
+            return response()->json($prospections);
+        }
     }
 
     public function store(StoreProspectionRequest $request)

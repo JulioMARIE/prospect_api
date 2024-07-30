@@ -3,12 +3,14 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateProspectionRequest extends FormRequest
 {
     public function authorize()
     {
-        return true;
+        $user = Auth::guard('sanctum')->user();
+        return $user && isset($user->responsable);
     }
 
     public function rules()

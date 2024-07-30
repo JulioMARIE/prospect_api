@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateSuiviRequest extends FormRequest
 {
@@ -11,7 +12,8 @@ class UpdateSuiviRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = Auth::guard('sanctum')->user();
+        return $user && isset($user->responsable);
     }
 
     /**
@@ -22,7 +24,7 @@ class UpdateSuiviRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'observation' => 'required|string|max:255',
         ];
     }
 }
