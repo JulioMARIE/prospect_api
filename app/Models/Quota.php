@@ -23,7 +23,7 @@ class Quota extends Model
 
     public function getStatutAttribute()
     {
-        return $this->nombre_realise >= $this->nombre_fixe ? 1 : 0;
+        return $this->nombre_fait >= $this->nombre_fixe ? 1 : 0;
     }
 
     public function commercial(){
